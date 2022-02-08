@@ -2,8 +2,6 @@ import numpy
 # print(numpy.random._bit_generator )
 # numpy.random.bit_generator = numpy.random._bit_generator
 import os
-
-from pytest import console_main
 from imutils import paths
 from pathlib import Path
 import imgaug as ia
@@ -27,7 +25,6 @@ DATASET_AUGM_DIR = "/home/abhian/Pictures/tags/gen2_shelf_icecream/augmented"
 DATASET_AUGM_IMAGES_DIR = "{}/img".format(DATASET_AUGM_DIR)
 DATASET_AUGM_ANNOTS_DIR = "{}/annotation".format(DATASET_AUGM_DIR)
 
-
 def create_directory(path, remove_dir=False):
     if (remove_dir):
         if (shutil.rmtree(path) == False):
@@ -44,14 +41,12 @@ def create_directory(path, remove_dir=False):
             print("Successfully created the directory {}".format(path))
     return True
 
-
 def get_image_annotation_path(stem):
     annotation_path = "{}/{}.xml".format(DATASET_ANNOTS_DIR, stem)
     if (os.path.isfile(annotation_path) == False):
         print("Annotation not found for " + stem)
         return False
     return annotation_path
-
 
 def decode_image_annotation(path_annotation):
     xml_list = []
@@ -74,13 +69,11 @@ def decode_image_annotation(path_annotation):
     xml_df = pandas.DataFrame(xml_list, columns=column_name)
     return xml_df
 
-
 def bbs_obj_to_df(bbs_object):
     bbs_array = bbs_object.to_xyxy_array()
     df_bbs = pandas.DataFrame(
         bbs_array, columns=['xmin', 'ymin', 'xmax', 'ymax'])
     return df_bbs
-
 
 def augment_image(df, images_path, aug_dest_dir, image_suffix, augmentor):
     aug_bbs_xy = pandas.DataFrame(
@@ -126,7 +119,6 @@ def augment_image(df, images_path, aug_dest_dir, image_suffix, augmentor):
     aug_bbs_xy = aug_bbs_xy.drop(['index'], axis=1)
     return aug_bbs_xy
 
-
 def get_xml_from_dataframe(origin_annotation_path, labels_df):
     tree = ET.parse(origin_annotation_path)
     annotation_et = tree.getroot()
@@ -158,10 +150,8 @@ def get_xml_from_dataframe(origin_annotation_path, labels_df):
                 floor(label_df["ymax"]))
     return tree
 
-
 # numpy.random.bit_generator = numpy.random._bit_generator
 ia.seed(1)
-
 if (create_directory(DATASET_AUGM_IMAGES_DIR) == False):
     exit(1)
 if (create_directory(DATASET_AUGM_ANNOTS_DIR) == False):
